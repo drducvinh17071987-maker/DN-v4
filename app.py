@@ -80,16 +80,7 @@ def build_label(E_spo2, E_hr, E_rr, vE_spo2, vE_hr, vE_rr, vE_spo2_prev=None):
     if d2 <= 1e-9:
         ratio = float("inf")
     else:
-        ratio = d1 / d2
-
-    # Optional V-shape only for SpO2 across two consecutive runs (Step A then Step B)
-    # If previous vE_spo2 exists (from Step A), detect a strong drop then strong recovery.
-    if vE_spo2_prev is not None:
-        # V-shape definition (illustrative):
-        # Step A: strong negative vE on SpO2 (dominant)
-        # Step B: strong positive vE on SpO2 (dominant)
-        if (vE_spo2_prev <= -0.50) and (vE_spo2 >= +0.50):
-            return ("SINGLE_CHANNEL_V_SHAPE (SpO₂) → ALARM_SUPPRESSED", "SpO₂", "V_SHAPE")
+        ratio = d1 / d2  
 
     if (ratio >= DOMINANCE_R) and (d1 >= MIN_D):
         # Decide "spike" vs "collapse" wording based on whether the dominant channel moved a lot
@@ -118,17 +109,6 @@ st.set_page_config(page_title="DN-dyn v4 — 3-Channel Demo", layout="wide")
 
 st.title("DN-dyn v4 — 3-Channel (HR / SpO₂ / RR) Demo")
 st.caption("Illustrative demo. Outputs are descriptive only (no prediction, no diagnosis, no decision).")
-
-# Optional: V-shape helper (two consecutive steps for SpO2)
-with st.expander("Optional: SpO₂ V-shape (two-step) helper", expanded=False):
-    st.write(
-        "If you want to reproduce the **V-shape example**, run **Step A (Drop)** first, "
-        "copy the displayed **SpO₂ vE** into the box below, then run **Step B (Recovery)**."
-    )
-    vE_spo2_prev_input = st.number_input(
-        "Previous SpO₂ vE from Step A (Drop) (optional)", value=0.0, step=0.01, format="%.2f"
-    )
-
 st.markdown("### Inputs")
 
 # Row 1: Prev
