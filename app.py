@@ -156,14 +156,11 @@ if run:
     df = pd.DataFrame(rows)
 
     # Label
-    vE_spo2_prev = None
-    if abs(vE_spo2_prev_input) > 1e-9:
-        vE_spo2_prev = float(vE_spo2_prev_input)
-
+    
     label, dominant, pattern = build_label(
         E_spo2=E_spo2, E_hr=E_hr, E_rr=E_rr,
         vE_spo2=vE_spo2, vE_hr=vE_hr, vE_rr=vE_rr,
-        vE_spo2_prev=vE_spo2_prev
+        vE_spo2_prev=None
     )
 
     st.markdown("### Output")
